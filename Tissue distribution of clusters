@@ -2,10 +2,10 @@ merge_meta = hb_merge2@meta.data
 cell_type = levels(factor(merge_meta$annotation2))
 cell_type
 
-a <- merge_meta %>% group_by(annotation2,sample_type) %>%summarise(a=n()) #各来源各cluster细胞量
-ac <- merge_meta %>% group_by(sample_type) %>% summarise(ac=n())   #各来源细胞量
-ab <- merge_meta %>% group_by(annotation2) %>% summarise(ab=n()) #各cluster细胞量
-abcd = dim(merge_meta)[1]  #细胞总量
+a <- merge_meta %>% group_by(annotation2,sample_type) %>%summarise(a=n()) 
+ac <- merge_meta %>% group_by(sample_type) %>% summarise(ac=n())  
+ab <- merge_meta %>% group_by(annotation2) %>% summarise(ab=n()) 
+abcd = dim(merge_meta)[1]  
 dist.data <- merge(a, ac)
 dist.data <- merge(dist.data, ab)
 
@@ -14,10 +14,6 @@ dist.data['c'] = dist.data$ac - dist.data$a
 dist.data['d'] = abcd - dist.data$ab - dist.data$c
 
 head(dist.data)
-
-# chisq.test
-#x=as.numeric(dist.data[1, c('a', 'c', 'b', 'd')])
-#x = chisq.test(matrix(x, nrow=2,ncol=2))
 
 dist.data[,c('p.value','Ea', 'Ec', 'Eb', 'Ed')] = t(apply(dist.data, 1, function(x){
   x=as.numeric(x[c('a', 'c', 'b', 'd')])
