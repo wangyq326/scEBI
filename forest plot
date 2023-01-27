@@ -27,29 +27,6 @@ cox$group[cox$group=="low"]="epc low"
 cox$Histology[cox$Histology%in%c("fetal and embryonal","fetal")]="epithelial"
 cox$Histology[cox$Histology%in%c("epithelial with SC","mix with sc","atypical")]="others"
 
-res.cox <- coxph(Surv(OS, OUTCOME2) ~ Age, data = cox)
-summary(res.cox)
-
-res.cox <- coxph(Surv(OS, OUTCOME2) ~ Stage, data = cox)
-summary(res.cox)
-
-res.cox <- coxph(Surv(OS, OUTCOME2) ~ group, data = cox)
-summary(res.cox)
-
-res.cox <- coxph(Surv(OS, OUTCOME2) ~ cluster, data = cox)
-summary(res.cox)
-
-res.cox <- coxph(Surv(OS, OUTCOME2) ~ Histology, data = cox)
-res.cox
-
-res.cox <- coxph(Surv(OS, OUTCOME2) ~ Gender, data = cox)
-res.cox
-
-res.cox <- coxph(Surv(OS, OUTCOME2) ~ risk, data = cox)
-summary(res.cox)
-
-
-##批量单因素分析
 covariates <- c("Age", "Gender", "group", "Stage","Histology","cluster")
 univ_formulas <- sapply(covariates,
                         function(x) as.formula(paste('Surv(OS, OUTCOME2)~', x)))
@@ -75,14 +52,14 @@ res=res[,1:2]
 
 as.data.frame(res)
 
-###森林图
+###forest plot
 library(tableone)  
 library(survival)
 ##install.packages("forestplot")
 library(forestplot)
 library(stringr)
 
-result<- read.csv('E:/课题组/HB/免疫+原复发/汇报ppt/HB文章/2016 JOH森林图 - os.csv',header=T)
+result<- read.csv('os.csv',header=T)
 head(result)
 
 forestplot(result[,c(1,5,6)],             
