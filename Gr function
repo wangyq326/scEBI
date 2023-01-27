@@ -8,7 +8,7 @@ library(readxl)
 setwd("")
 ######################################################################
 #########G245
-G245data<-read_xlsx('整合数据/all-G245S-P1-roi01-lxf-2022.11.28.xlsx')
+G245data<-read_xlsx('all-G245S.xlsx')
 
 G245data$X=G245data$X*0.31
 G245data$Y=G245data$Y*0.31
