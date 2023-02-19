@@ -20,9 +20,9 @@ Details of markers identification and the performance of heatmap (Figure 1C) can
 8. Cell developmental trajectory
 (Details can be checked in 'monocle3' file.)
 
-9. Cell-cell interaction analysis
+9. Cell-cell interaction analysis (reference: https://github.com/sqjin/CellChat)
 
-10. TCR and BCR analysis
+10. TCR and BCR analysis (Details can be checked in 'TCR and BCR analysis' file)
 
 11. Analyses in Bulk RNA sequencing
 (Details can be checked in 'forest plot' file.)
