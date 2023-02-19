@@ -99,3 +99,55 @@ HB@meta.data$celltype[HB@meta.data$seurat_clusters%in%c("14")]<-"Cholangiocyte"
 DimPlot(HB, reduction = "umap",group.by = "celltype",label =T,label.size = 5)+
   scale_color_d3("category20c")+theme(legend.position = "bottom")
 
+
+####Sub-clustering (NK/T cell as one example)
+nkt <- subset(HB,idents="NK/T")
+
+nkt<- FindVariableFeatures(nkt, selection.method = "vst", nfeatures = 500)
+nkt<- ScaleData(nkt, features = VariableFeatures(nkt))
+nkt <- RunPCA(nkt, features = VariableFeatures(object = nkt),nps=50,verbose = TRUE)
+nkt <- nkt %>% RunHarmony("orig.ident",plot_convergence=TRUE)
+nkt<-RunUMAP(nkt,dims = 1:30,reduction = "harmony")
+nkt <- FindNeighbors(nkt,reduction = "harmony",dims = 1:30)
+nkt <- FindClusters(nkt, resolution = 0.4)
+
+# Visualization
+DimPlot(nkt, reduction = "umap", label = TRUE)+scale_color_d3("category20c")
+DimPlot(nkt, reduction = "umap", group.by = "orig.ident", repel = TRUE)+scale_color_igv("default")+NoLegend()
+DimPlot(nkt, reduction = "umap", group.by = "sample_type", repel = TRUE)+scale_color_d3("category20c")
+#
+nkt$annotation <- "T_cell"
+nkt$annotation[nkt$seurat_clusters%in%c('1')] <- "NK_CX3CR1"
+nkt$annotation[nkt$seurat_clusters%in%c('0','10')] <- "NK_NCAM1"
+nkt$annotation[nkt$seurat_clusters%in%c('5')] <- "gdT"
+nkt$annotation[nkt$seurat_clusters%in%c('4')] <- "MAIT"
+
+##
+Idents(nkt) <- "annotation"
+t_cell <- subset(nkt,idents = c("T_cell"))
+
+t_cell<- FindVariableFeatures(t_cell, selection.method = "vst", nfeatures = 500)
+t_cell<- ScaleData(t_cell, features = VariableFeatures(t_cell))
+t_cell <- RunPCA(t_cell, features = VariableFeatures(object = t_cell),nps=50,verbose = TRUE)
+t_cell <- t_cell %>% RunHarmony("orig.ident",plot_convergence=TRUE)
+t_cell<-RunUMAP(t_cell,dims = 1:30,reduction = "harmony")
+t_cell <- FindNeighbors(t_cell,reduction = "harmony",dims = 1:30)
+t_cell <- FindClusters(t_cell, resolution = 1)
+DimPlot(t_cell, reduction = "umap", label = TRUE)+scale_color_igv("default")
+
+t_cell$annotation <- "na"
+t_cell$annotation[t_cell$seurat_clusters%in%c("0","11")] <- "CD8_c1_GZMK"
+t_cell$annotation[t_cell$seurat_clusters=="1"] <- "CD4_c1_CD40LG"
+t_cell$annotation[t_cell$seurat_clusters%in%c("2","16")] <- "CD8_c2_ZNF683"
+t_cell$annotation[t_cell$seurat_clusters%in%c("3")] <- "Naive_T"
+t_cell$annotation[t_cell$seurat_clusters%in%c("4","10")] <- "CD8_c3_CX3CR1"
+t_cell$annotation[t_cell$seurat_clusters=="5"] <- "CD4_c2_FOXP3"
+t_cell$annotation[t_cell$seurat_clusters%in%c("7","20")] <- "CD8_c4_CXCL13"
+t_cell$annotation[t_cell$seurat_clusters=="8"] <- "NK_c3_TYROBP"
+t_cell$annotation[t_cell$seurat_clusters=="9"] <- "CD4_c3_IL7R"
+t_cell$annotation[t_cell$seurat_clusters=="12"] <- "Cycling_T"
+t_cell$annotation[t_cell$seurat_clusters=="13"] <- "ILC3_RORC"
+t_cell$annotation[t_cell$seurat_clusters=="17"] <- "ILC1_TBX21"
+t_cell$annotation[t_cell$seurat_clusters=="18"] <- "ILC2_GATA3"
+
+DimPlot(t_cell, reduction = "umap",group.by = "annotation", label = TRUE)+scale_color_igv("default")
