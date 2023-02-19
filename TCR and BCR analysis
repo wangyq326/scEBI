@@ -84,3 +84,72 @@ ggplot(cell.prop,aes(sample,proportion,fill=celltype))+
   geom_bar(stat = "identity",position="fill")+ggtitle("")+theme_classic()+ 
   theme(axis.ticks.length=unit(0.5,'cm'))+guides(fill=guide_legend(title=NULL))+
   RotatedAxis()+scale_fill_d3("category20c")
+
+
+########BCR
+library(patchwork)
+add_clonotype2 <- function(tcr_prefix, seurat_obj, type="t"){
+  #读入contig_annotations.csv
+  tcr <- read.csv(paste(tcr_prefix,"filtered_contig_annotations.csv", sep=""))
+  # Subsets so only the first line of each barcode is kept,as each entry for given barcode will have same clonotype.
+  tcr <- tcr[!duplicated(tcr$barcode), ]
+  names(tcr)[names(tcr) == "raw_clonotype_id"] <- "clonotype_id"
+  # Clonotype-centric info.
+  clono <- read.csv(paste(tcr_prefix,"clonotypes.csv", sep=""))
+  # Slap the AA sequences onto our original table by clonotype_id.
+  tcr <- merge(tcr, clono)
+  #Reorder so barcodes are first column and set them as rownames.
+  rownames(tcr) <- tcr[,2]
+  tcr[,2] <- NULL
+  colnames(tcr) <- paste(type, colnames(tcr), sep="_")
+  # Add to the Seurat object's metadata.
+  clono_seurat <- AddMetaData(object=seurat_obj, metadata=tcr)
+  return(clono_seurat)
+}
+
+#####load data
+bcell_bcr<- add_clonotype2("BCR/",bcell_bcr, type="onlyh")
+
+bcell_bcr@meta.data$BCR <- c("No BCR")
+bcell_bcr@meta.data$BCR[bcell_bcr@meta.data$b_is_cell==c("TRUE")]<-"Yes"
+DimPlot(bcell_bcr, reduction = "umap",group.by = "BCR", 
+         repel = TRUE,cols = c("#E6E6E6","#3180D7"))
+
+######
+table(bcell_bcr$b_chain)
+table(bcell_bcr$b_c_gene)
+bcell_bcr@meta.data$BCRtype <- c("nobcr")
+bcell_bcr@meta.data$BCRtype[bcell_bcr@meta.data$b_c_gene==c("IGHM")]<-"IgM"
+bcell_bcr@meta.data$BCRtype[bcell_bcr@meta.data$b_c_gene==c("IGHA1")]<-"IgA1"
+bcell_bcr@meta.data$BCRtype[bcell_bcr@meta.data$b_c_gene==c("IGHA2")]<-"IgA2"
+bcell_bcr@meta.data$BCRtype[bcell_bcr@meta.data$b_c_gene==c("IGHD")]<-"IgD"
+bcell_bcr@meta.data$BCRtype[bcell_bcr@meta.data$b_c_gene==c("IGHE")]<-"IgE"
+bcell_bcr@meta.data$BCRtype[bcell_bcr@meta.data$b_c_gene==c("IGHG1")]<-"IgG1"
+bcell_bcr@meta.data$BCRtype[bcell_bcr@meta.data$b_c_gene==c("IGHG2")]<-"IgG2"
+bcell_bcr@meta.data$BCRtype[bcell_bcr@meta.data$b_c_gene==c("IGHG3")]<-"IgG3"
+bcell_bcr@meta.data$BCRtype[bcell_bcr@meta.data$b_c_gene==c("IGHG4")]<-"IgG4"
+bcell_bcr@meta.data$BCRtype[bcell_bcr@meta.data$b_c_gene==c("IGHM")]<-"IgM"
+bcell_bcr@meta.data$BCRtype[bcell_bcr@meta.data$b_c_gene==c("IGKC")]<-"kappa"
+bcell_bcr@meta.data$BCRtype[bcell_bcr@meta.data$b_c_gene%in%c("IGLC1","IGLC2","IGLC3")]<-"lamda"
+DimPlot(bcell_bcr,group.by = "BCRtype")+scale_color_d3("category20c")
+table(bcell_bcr$BCRtype)
+
+bcell_bcr@meta.data$igtype <-  bcell_bcr@meta.data$BCRtype
+bcell_bcr@meta.data$igtype[bcell_bcr@meta.data$BCRtype%in%c("IgA1","IgA2","IgE",
+                                                             "IgG1","IgG2","IgG3","IgG4")]<-"CSIg"
+bcell_bcr@meta.data$igtype[bcell_bcr@meta.data$BCRtype%in%c("kappa","lamda","nobcr")]<-"nobcr"
+DimPlot(bcell_bcr,group.by = "igtype")
+DimPlot(bcell_bcr, reduction = "umap",group.by = "annotation", label = TRUE)+scale_color_d3("category20c")
+
+Idents(bcell_bcr) <- "annotation"
+bcell_bcr <- subset(bcell_bcr,idents="pDC",invert=T)
+cell.prop <-as.data.frame(prop.table(table(Idents(bcell_bcr), bcell_bcr$igtype), margin = 2))
+colnames(cell.prop)<-c("cluster","igtype","proportion")
+ggplot(cell.prop,aes(x=factor(cluster,levels = c("Pre-pro_B","Pro_B","Pre_B","Immature_B","Naive_B",
+                                                 "Activated_B","Plasma_cell","Plasmablast")),proportion,fill=igtype))+
+  geom_bar(stat = "identity",position="fill")+ggtitle("")+theme_bw()+ 
+  theme(axis.ticks.length=unit(0.5,'cm'))+guides(fill=guide_legend(title=NULL))+
+  RotatedAxis()+scale_fill_d3("category20c")+xlab("")
+
+
+
