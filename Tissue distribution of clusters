@@ -1,10 +1,10 @@
-merge_meta = hb_merge2@meta.data
-cell_type = levels(factor(merge_meta$annotation2))
+merge_meta = HB@meta.data
+cell_type = levels(factor(merge_meta$annotation))
 cell_type
 
-a <- merge_meta %>% group_by(annotation2,sample_type) %>%summarise(a=n()) 
+a <- merge_meta %>% group_by(annotation,sample_type) %>%summarise(a=n()) 
 ac <- merge_meta %>% group_by(sample_type) %>% summarise(ac=n())  
-ab <- merge_meta %>% group_by(annotation2) %>% summarise(ab=n()) 
+ab <- merge_meta %>% group_by(annotation) %>% summarise(ab=n()) 
 abcd = dim(merge_meta)[1]  
 dist.data <- merge(a, ac)
 dist.data <- merge(dist.data, ab)
@@ -21,16 +21,17 @@ dist.data[,c('p.value','Ea', 'Ec', 'Eb', 'Ed')] = t(apply(dist.data, 1, function
   return(c(k.test$p.value, as.vector(k.test$expected)))
 }))
 dist.data['Reo'] = dist.data$a / dist.data$Ea
+
 library(ggplot2)
 library(reshape2)
 library(pheatmap)
-dist.heatmap.data <- dist.data[,c("annotation2", 'sample_type', 'Reo','p.value')]
+dist.heatmap.data <- dist.data[,c("annotation", 'sample_type', 'Reo','p.value')]
 
 dist.heatmap<-data.frame(matrix(data=0, nrow = length(cell_type), ncol=3))
 rownames(dist.heatmap) = cell_type
 colnames(dist.heatmap) = c('tumor',"non_tumor",'p.value')
 for(i in 1:dim(dist.heatmap.data)[1]){
-  ct = as.character(dist.heatmap.data[i, 'annotation2'])
+  ct = as.character(dist.heatmap.data[i, 'annotation'])
   ts = dist.heatmap.data[i, 'sample_type']
   reo = dist.heatmap.data[i, 'Reo']
   p=dist.heatmap.data[i, 'p.value']
