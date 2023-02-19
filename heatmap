@@ -4,8 +4,17 @@ library(dplyr)
 library(ggplot2)
 library(pheatmap)
 #
-hb_merge2=subset(hb_merge,features=marker_gene$gene)
-hb_merge2 <- subset(hb_merge2,
+HB=readRDS("HB.rds")
+
+Idents(HB)="annotation"
+marker_gene=FindAllMarkers(HB,only.pos = T)
+write.csv(marker_gene,"total_deg.csv")
+top10 <- marker_gene %>% group_by(cluster) %>% top_n(10, avg_log2FC)
+marker_gene=top10[!duplicated(top10$gene),]
+my_order=unique(HB$annotation)
+
+HB2=subset(HB,features=marker_gene$gene)
+hb_merge2 <- subset(HB2,
                  subset = annotation %in% my_order)
 #
 my_order_bk=my_order
