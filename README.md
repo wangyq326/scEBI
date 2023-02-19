@@ -3,7 +3,7 @@ Manuscript: Intratumoral erythroblastic islands restrain anti-tumor immunity in 
 Codes for following methods:
 
 1. Raw data processing
-2. Unsupervised clustering and markers identification
+2. Unsupervised clustering and markers identification 
 Details of raw data processing and unsupervised clustering can be checked in 'QC and annotation' file.
 Details of markers identification and the performance of heatmap (Figure 1C) can be checked in 'heatmap' file.
 
