@@ -16,3 +16,6 @@ names(phe)=rownames(epc_pure@meta.data)
 mat_tumor<- as.data.frame(epc_pure@assays$RNA@counts)
 mat_tumor[1:4,1:4]
 results <- CytoTRACE(mat = mat_tumor,subsamplesize = 1000,ncores = 10)
+
+
+reference: https://github.com/seqyuan/CytoTRACE
