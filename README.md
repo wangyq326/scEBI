@@ -1,5 +1,6 @@
-Manuscript: Intratumoral erythroblastic islands restrain anti-tumor immunity in hepatoblastoma
+#Manuscript: Intratumoral erythroblastic islands restrain anti-tumor immunity in hepatoblastoma
 
+##Contents
 Codes for following methods:
 
 1. Raw data processing
@@ -30,5 +31,7 @@ Details of markers identification and the performance of heatmap (Figure 1C) can
 12. Multispectral imaging spatial analysis
 (Details can be checked in 'Gr function' file)
 
-Requests for resources, reagents and further information regarding this manuscript should be addressed and fulfilled by the lead contact, Sui Peng (pengsui@mail.sysu.edu.cn).
+##Contact
+Yuanqi Wang (wangyq326@mail.sysu.edu.cn)
+Sui Peng (pengsui@mail.sysu.edu.cn).
 
