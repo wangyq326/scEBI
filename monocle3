@@ -1,3 +1,6 @@
+##reference:https://cole-trapnell-lab.github.io/monocle3/
+
+
 library(monocle3)
 library(Seurat)
 library(ggsci)
@@ -120,7 +123,7 @@ p2 <- plot_cells(cds, color_cells_by = "partition", show_trajectory_graph = FALS
   ggtitle("label by partitionID")
 p = p1+p2
 p
-##识别轨迹
+##
 cds <- learn_graph(cds)
 plot_cells(cds, label_groups_by_cluster = FALSE, label_leaves = FALSE, 
            label_branch_points = FALSE)
