@@ -15,7 +15,7 @@ Details of markers identification and the performance of heatmap (Figure 1C) can
 
 6. Differential expression and gene set enrichment analysis (Details can be checked in 'DEG analysis' file)
 
-7. Cell proliferation analysis (reference:https://github.com/seqyuan/CytoTRACE)
+7. Cell proliferation analysis (Details can be checked in 'Cell proliferation analysis' file)
 
 8. Cell developmental trajectory
 (Details can be checked in 'monocle3' file.)
@@ -29,3 +29,6 @@ Details of markers identification and the performance of heatmap (Figure 1C) can
 
 12. Multispectral imaging spatial analysis
 (Details can be checked in 'Gr function' file)
+
+Requests for resources, reagents and further information regarding this manuscript should be addressed and fulfilled by the lead contact, Sui Peng (pengsui@mail.sysu.edu.cn).
+
