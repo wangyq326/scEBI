@@ -18,3 +18,6 @@ This repository contains the scripts for producing the quantitative results in o
 >Please contact us:   
 >Yuanqi Wang (wangyq326@mail.sysu.edu.cn)  
 >Sui Peng (pengsui@mail.sysu.edu.cn)
+
+## Citation
+>Yuanqi Wang, et al.Intratumoral erythroblastic islands restrain anti-tumor immunity in hepatoblastoma.
